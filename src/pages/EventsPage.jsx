@@ -10,6 +10,7 @@ import {
   HStack,
   Input,
   SimpleGrid,
+  Tag,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
@@ -48,6 +49,7 @@ export const EventsPage = () => {
             w={"80%"}
             justifyContent={"center"}
             marginBottom={"2rem"}
+            bg="white"
           >
             <Heading marginBottom={"2rem"} as="h1" size="3xl">
               Upcoming events
@@ -88,29 +90,42 @@ export const EventsPage = () => {
                 />
               </Box>
               <Box p={4}>
-                <Box
-                  bg="black"
-                  display={"inline-block"}
-                  px={2}
-                  py={1}
-                  color="white"
-                  mb={2}
-                >
+                <Box>
+                  {/*
                   {categories.map((category) =>
-                    event.categoryIds === category.id ? (
+                    event.categoryIds.includes(category.id) ? (
                       <Text
                         fontSize={"xs"}
                         fontWeight="medium"
-                        key={categories.id}
+                        key={category.id}
                       >
                         {category.name}
                       </Text>
                     ) : null
+                  )} 
+                  */}
+
+                  {categories.map((category) =>
+                    event.categoryIds?.includes(category.id) ? (
+                      <Tag
+                        key={category.id}
+                        fontWeight="medium"
+                        fontSize={"sm"}
+                        color="white"
+                        bg="black"
+                        borderRadius="0"
+                        p={2}
+                        marginRight={3}
+                        marginBottom={3}
+                      >
+                        {category.name}
+                      </Tag>
+                    ) : null
                   )}
                 </Box>
-                {console.log(categories.id)} {/* dit geeft undefind*/}
-                {console.log(event.categoryIds)}{" "}
-                {/* dit geeft de juiste waarde*/}
+
+                {console.log(categories)}
+
                 <Link to={`event/${event.id}`}>
                   <Heading
                     marginBottom={"0.3rem"}

@@ -7,6 +7,7 @@ import {
   Text,
   useColorModeValue,
   HStack,
+  Tag,
 } from "@chakra-ui/react";
 import React from "react";
 import { useLoaderData, Link } from "react-router-dom";
@@ -49,19 +50,22 @@ export const EventPage = () => {
           </Box>
 
           <Box p={6}>
-            <Box
-              bg="black"
-              display={"inline-block"}
-              px={2}
-              py={1}
-              color="white"
-              mb={2}
-            >
+            <Box>
               {categories.map((category) =>
                 event.categoryIds.includes(category.id) ? (
-                  <Text fontSize={"sm"} fontWeight="medium" key={category.id}>
+                  <Tag
+                    fontSize={"sm"}
+                    fontWeight="medium"
+                    key={category.id}
+                    color="white"
+                    bg="black"
+                    borderRadius="0"
+                    p={2}
+                    marginRight={3}
+                    marginBottom={3}
+                  >
                     {category.name}
-                  </Text>
+                  </Tag>
                 ) : null
               )}
             </Box>
