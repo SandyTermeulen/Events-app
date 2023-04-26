@@ -26,17 +26,16 @@ export const action = async ({ request }) => {
   return redirect(`/event/${newId}`);
 };
 
-const toast = useToast();
-
 fetch(action).then((response) => {
-  if (response.ok)
-    toast({
-      title: "Event added succesfully.",
-      status: "success",
-      duration: 5000,
-      position: "top-right",
-      isClosable: true,
-    });
+  const toast = useToast();
+  console.log(response.ok);
+  toast({
+    title: "Event added succesfully.",
+    status: "success",
+    duration: 5000,
+    position: "top-right",
+    isClosable: true,
+  });
 });
 
 export const loader = async () => {
