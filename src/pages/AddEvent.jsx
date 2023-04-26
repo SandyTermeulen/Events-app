@@ -9,6 +9,7 @@ import {
   Input,
   Select,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 import { Form, useLoaderData, redirect } from "react-router-dom";
 
@@ -24,6 +25,19 @@ export const action = async ({ request }) => {
 
   return redirect(`/event/${newId}`);
 };
+
+const toast = useToast();
+
+fetch(action).then((response) => {
+  if (response.ok)
+    toast({
+      title: "Event added succesfully.",
+      status: "success",
+      duration: 5000,
+      position: "top-right",
+      isClosable: true,
+    });
+});
 
 export const loader = async () => {
   const categories = await fetch("http://localhost:3000/categories");

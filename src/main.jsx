@@ -11,7 +11,6 @@ import {
   action as addevent,
 } from "./pages/AddEvent";
 import { EditEvent, loader as editEventLoader } from "./pages/EditEvent";
-import ErrorBoundary from "./ErrorBoundary";
 
 const router = createBrowserRouter([
   {
@@ -32,7 +31,7 @@ const router = createBrowserRouter([
         path: "/event/addevent",
         element: <AddEvent />,
         loader: addEventLoader,
-        action: <ErrorBoundary>addevent</ErrorBoundary>,
+        action: addevent,
       },
       {
         path: "editevent/:eventId",
