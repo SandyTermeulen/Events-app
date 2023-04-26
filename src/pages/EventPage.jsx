@@ -6,9 +6,14 @@ import {
   Img,
   Text,
   useColorModeValue,
-  HStack,
   Tag,
+  Image,
+  useToast,
+  Button,
+  Flex,
+  Spacer,
 } from "@chakra-ui/react";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import React from "react";
 import { useLoaderData, Link } from "react-router-dom";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
@@ -27,6 +32,27 @@ export const loader = async ({ params }) => {
 
 export const EventPage = () => {
   const { event, users, categories } = useLoaderData();
+  const toast = useToast();
+
+  const handleDeleteClick = () => {
+    if (window.confirm("Are you 100% sure you want to delete this event?")) {
+      fetch(`http://localhost:3000/events/${event.id}`, {
+        method: "DELETE",
+      })
+        .then(() => {
+          toast({
+            title: "Event deleted successfully.",
+            status: "success",
+            duration: 5000,
+            position: "top-right",
+            isClosable: true,
+          });
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
 
   return (
     <Center>
@@ -37,38 +63,58 @@ export const EventPage = () => {
           border={"1px"}
           borderColor="black"
           boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
+          margin={"2rem"}
+          w={{ base: "95%", md: "90%", lg: "80%" }}
+          mx="auto"
         >
-          <Box>
-            <Img
-              src={event.image}
-              roundedTop={"sm"}
-              objectFit="cover"
-              h="full"
-              w="full"
-              alt={"Blog Image"}
-            />
-          </Box>
+          <Img
+            src={event.image}
+            roundedTop={"sm"}
+            objectFit="cover"
+            h={{ base: "15rem", md: "20rem", lg: "25rem" }}
+            w="full"
+            alt={"Event Image"}
+          />
 
           <Box p={6}>
-            <Box>
+            <Flex alignItems={"center"}>
               {categories.map((category) =>
                 event.categoryIds.includes(category.id) ? (
-                  <Tag
-                    fontSize={"sm"}
-                    fontWeight="medium"
-                    key={category.id}
-                    color="white"
-                    bg="black"
-                    borderRadius="0"
-                    p={2}
-                    marginRight={3}
-                    marginBottom={3}
-                  >
-                    {category.name}
-                  </Tag>
+                  <Box key={event.categoryIds}>
+                    <Tag
+                      fontSize={"sm"}
+                      fontWeight="medium"
+                      key={category.id}
+                      color="white"
+                      bg="black"
+                      borderRadius="0"
+                      p={2}
+                      marginRight={3}
+                      marginBottom={3}
+                    >
+                      {category.name}
+                    </Tag>
+                  </Box>
                 ) : null
               )}
-            </Box>
+              <Spacer />
+              {users.map((user) =>
+                user.id == event.createdBy ? (
+                  <Box key={user.id}>
+                    <Image boxSize="33px" src={user.image} />
+                  </Box>
+                ) : null
+              )}
+              {users.map((user) =>
+                user.id == event.createdBy ? (
+                  <Box key={user.id}>
+                    <Tag color="white" bg="black" borderRadius="0" p={2}>
+                      <Text>{user.name}</Text>
+                    </Tag>
+                  </Box>
+                ) : null
+              )}
+            </Flex>
 
             <Heading marginBottom={"0.3rem"} as="h1" size="2xl" noOfLines={1}>
               {event.title}
@@ -91,15 +137,61 @@ export const EventPage = () => {
 
             <Text fontSize="4xl" noOfLines={2}>{`${event.description}`}</Text>
             <Text>location: {event.location}</Text>
+
+            <Box marginTop={"1rem"}>
+              <Link to={"/"}>
+                <Button
+                  margin={"0.5rem"}
+                  variant="outline"
+                  borderRadius="0"
+                  bg={"white"}
+                  borderColor="black"
+                  boxShadow={useColorModeValue(
+                    "6px 6px 0 black",
+                    "6px 6px 0 cyan"
+                  )}
+                >
+                  Back to all events
+                  <ArrowForwardIcon marginLeft={"1rem"} />
+                </Button>
+              </Link>
+
+              <Link to={"/"}>
+                <Button
+                  onClick={handleDeleteClick}
+                  margin={"0.5rem"}
+                  variant="outline"
+                  borderRadius="0"
+                  bg={"white"}
+                  borderColor="black"
+                  boxShadow={useColorModeValue(
+                    "6px 6px 0 black",
+                    "6px 6px 0 cyan"
+                  )}
+                >
+                  Delete event
+                  <DeleteIcon marginLeft={"1rem"} />
+                </Button>
+              </Link>
+
+              <Link to={`/editevent/${event.id}`}>
+                <Button
+                  margin={"0.5rem"}
+                  variant="outline"
+                  borderRadius="0"
+                  bg={"white"}
+                  borderColor="black"
+                  boxShadow={useColorModeValue(
+                    "6px 6px 0 black",
+                    "6px 6px 0 cyan"
+                  )}
+                >
+                  Edit event
+                  <EditIcon marginLeft={"1rem"} />
+                </Button>
+              </Link>
+            </Box>
           </Box>
-          <HStack p={4} borderTop={"1px"} color="black">
-            <Link to={"/"}>
-              <Text fontSize={"md"} fontWeight={"semibold"}>
-                Back to all events
-              </Text>
-            </Link>
-            <ArrowForwardIcon />
-          </HStack>
         </Box>
       </Box>
     </Center>

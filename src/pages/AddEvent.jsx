@@ -11,10 +11,10 @@ import {
   useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
-import React from "react";
 import { Form, useLoaderData, redirect } from "react-router-dom";
 
 export const action = async ({ request }) => {
+  const toast = useToast();
   const formData = Object.fromEntries(await request.formData());
   const newId = await fetch("http://localhost:3000/events", {
     method: "POST",
@@ -23,6 +23,20 @@ export const action = async ({ request }) => {
   })
     .then((res) => res.json())
     .then((json) => json.id);
+  toast({
+    title: "Event added succesfully.",
+    status: "success",
+    duration: 5000,
+    position: "top-right",
+    isClosable: true,
+  });
+  toast({
+    title: "Event not added.",
+    status: "error",
+    duration: 5000,
+    position: "top-right",
+    isClosable: true,
+  });
   return redirect(`/event/${newId}`);
 };
 
@@ -33,7 +47,6 @@ export const loader = async () => {
 };
 
 export const AddEvent = () => {
-  const toast = useToast();
   const { users, categories } = useLoaderData();
 
   return (
@@ -45,12 +58,13 @@ export const AddEvent = () => {
         boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
         padding={6}
         w={"80%"}
+        marginTop={"2rem"}
       >
         <Heading marginBottom={"3rem"} as="h1" size="2xl">
           Add new event
         </Heading>
         <Form method="post" id="new-event-form">
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Select user</FormLabel>
             <Select name="createdBy" placeholder="Select User">
               {users.map((user) => (
@@ -60,7 +74,7 @@ export const AddEvent = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Title</FormLabel>
             <Input
               placeholder="An exciting title..."
@@ -69,7 +83,7 @@ export const AddEvent = () => {
               name="title"
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Description</FormLabel>
             <Input
               name="description"
@@ -77,7 +91,7 @@ export const AddEvent = () => {
               placeholder="Description"
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Image (URL)</FormLabel>
             <Input
               placeholder="https://website.com/image.jpg"
@@ -86,7 +100,7 @@ export const AddEvent = () => {
               name="image"
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Select category</FormLabel>
             <Select name="categoryIds" placeholder="Select category">
               {categories.map((category) => (
@@ -96,7 +110,7 @@ export const AddEvent = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Location</FormLabel>
             <Input
               placeholder="Location"
@@ -105,7 +119,7 @@ export const AddEvent = () => {
               name="location"
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Start time</FormLabel>
             <input
               aria-label="startTime"
@@ -113,23 +127,20 @@ export const AddEvent = () => {
               name="startTime"
             />
           </FormControl>
-          <FormLabel>
+          <FormControl isRequired>
             <FormLabel>End time</FormLabel>
             <input aria-label="endTime" type="datetime-local" name="endTime" />
-          </FormLabel>
+          </FormControl>
+
           <Button
             type="submit"
-            onClick={() =>
-              toast({
-                title: "Event Added Succesfully.",
-                status: "success",
-                duration: 5000,
-                position: "top-right",
-                isClosable: true,
-              })
-            }
+            margin={"1rem"}
+            variant="outline"
+            borderRadius="0"
+            borderColor="black"
+            boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
           >
-            Save
+            Add event
           </Button>
         </Form>
       </Box>

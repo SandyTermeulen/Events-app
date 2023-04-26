@@ -5,13 +5,12 @@ import { EventPage, loader as eventPageLoader } from "./pages/EventPage";
 import { EventsPage, loader as eventsPageLoader } from "./pages/EventsPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Root } from "./components/Root";
-import "./index.css";
-import { AddNewEvent } from "./pages/AddNewEvent";
 import {
   AddEvent,
   loader as addEventLoader,
   action as addevent,
 } from "./pages/AddEvent";
+import { EditEvent, loader as editEventLoader } from "./pages/EditEvent";
 
 const router = createBrowserRouter([
   {
@@ -27,17 +26,17 @@ const router = createBrowserRouter([
         path: "/event/:eventId",
         element: <EventPage />,
         loader: eventPageLoader,
-        // action: addComment,
-      },
-      {
-        path: "/event/new",
-        element: <AddNewEvent />,
       },
       {
         path: "/event/addevent",
         element: <AddEvent />,
         loader: addEventLoader,
         action: addevent,
+      },
+      {
+        path: "editevent/:eventId",
+        element: <EditEvent />,
+        loader: editEventLoader,
       },
     ],
   },

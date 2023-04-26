@@ -12,7 +12,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, Link, useLoaderData } from "react-router-dom";
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 
 export const loader = async ({ params }) => {
   const categories = await fetch("http://localhost:3000/categories");
@@ -28,7 +29,11 @@ export const loader = async ({ params }) => {
 export const EditEvent = () => {
   const toast = useToast();
   const { users, categories, event } = useLoaderData();
-  const [updatedEvent, setUpdatedEvent] = useState({ ...event });
+  const [updatedEvent, setUpdatedEvent] = useState({
+    ...event,
+    startTime: new Date(event.startTime),
+    endTime: new Date(event.endTime),
+  });
 
   const handleInputChange = (e) => {
     setUpdatedEvent({ ...updatedEvent, [e.target.name]: e.target.value });
@@ -47,18 +52,17 @@ export const EditEvent = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        toast({
+          title: "Event Edited Succesfully.",
+          status: "success",
+          duration: 5000,
+          position: "top-right",
+          isClosable: true,
+        });
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-
-    toast({
-      title: "Event Edited Succesfully.",
-      status: "success",
-      duration: 5000,
-      position: "top-right",
-      isClosable: true,
-    });
   };
 
   return (
@@ -70,12 +74,13 @@ export const EditEvent = () => {
         boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
         padding={6}
         w={"80%"}
+        marginTop={"2rem"}
       >
         <Heading marginBottom={"3rem"} as="h1" size="2xl">
           Edit event
         </Heading>
         <Form method="PUT" id="new-event-form" onSubmit={handleEditSubmit}>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Select user</FormLabel>
             <Select
               name="createdBy"
@@ -90,7 +95,7 @@ export const EditEvent = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Title</FormLabel>
             <Input
               placeholder="An exciting title..."
@@ -101,7 +106,7 @@ export const EditEvent = () => {
               onChange={handleInputChange}
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Description</FormLabel>
             <Input
               name="description"
@@ -111,7 +116,7 @@ export const EditEvent = () => {
               onChange={handleInputChange}
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Image (URL)</FormLabel>
             <Input
               placeholder="https://website.com/image.jpg"
@@ -122,7 +127,7 @@ export const EditEvent = () => {
               onChange={handleInputChange}
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Select category</FormLabel>
             <Select
               name="categoryIds"
@@ -137,7 +142,7 @@ export const EditEvent = () => {
               ))}
             </Select>
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Location</FormLabel>
             <Input
               placeholder="Location"
@@ -148,7 +153,7 @@ export const EditEvent = () => {
               onChange={handleInputChange}
             />
           </FormControl>
-          <FormControl>
+          <FormControl isRequired>
             <FormLabel>Start time</FormLabel>
             <input
               aria-label="startTime"
@@ -158,7 +163,7 @@ export const EditEvent = () => {
               onChange={handleInputChange}
             />
           </FormControl>
-          <FormLabel>
+          <FormControl isRequired>
             <FormLabel>End time</FormLabel>
             <input
               aria-label="endTime"
@@ -167,10 +172,32 @@ export const EditEvent = () => {
               value={updatedEvent.endTime}
               onChange={handleInputChange}
             />
-          </FormLabel>
-          {console.log(updatedEvent)}
-          <Button type="submit">Save</Button>
+          </FormControl>
+          <Button
+            type="submit"
+            margin={"0.5rem"}
+            variant="outline"
+            borderRadius="0"
+            bg={"white"}
+            borderColor="black"
+            boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
+          >
+            Save
+          </Button>
         </Form>
+        <Link to={"/"}>
+          <Button
+            margin={"0.5rem"}
+            variant="outline"
+            borderRadius="0"
+            bg={"white"}
+            borderColor="black"
+            boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
+          >
+            Back to all events
+            <ArrowForwardIcon marginLeft={"1rem"} />
+          </Button>
+        </Link>
       </Box>
     </Center>
   );
