@@ -8,13 +8,11 @@ import {
   Heading,
   Input,
   Select,
-  useToast,
   useColorModeValue,
 } from "@chakra-ui/react";
 import { Form, useLoaderData, redirect } from "react-router-dom";
 
 export const action = async ({ request }) => {
-  const toast = useToast();
   const formData = Object.fromEntries(await request.formData());
   const newId = await fetch("http://localhost:3000/events", {
     method: "POST",
@@ -23,20 +21,7 @@ export const action = async ({ request }) => {
   })
     .then((res) => res.json())
     .then((json) => json.id);
-  toast({
-    title: "Event added succesfully.",
-    status: "success",
-    duration: 5000,
-    position: "top-right",
-    isClosable: true,
-  });
-  toast({
-    title: "Event not added.",
-    status: "error",
-    duration: 5000,
-    position: "top-right",
-    isClosable: true,
-  });
+
   return redirect(`/event/${newId}`);
 };
 
