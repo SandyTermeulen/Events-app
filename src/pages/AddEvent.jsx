@@ -11,7 +11,9 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { Form, useLoaderData, redirect } from "react-router-dom";
+import { useEffect } from "react";
+
+import { Form, useLoaderData, redirect, useFetcher } from "react-router-dom";
 
 export const action = async ({ request }) => {
   const formData = Object.fromEntries(await request.formData());
@@ -26,18 +28,6 @@ export const action = async ({ request }) => {
   return redirect(`/event/${newId}`);
 };
 
-fetch(action).then((response) => {
-  const toast = useToast();
-  console.log(response.ok);
-  toast({
-    title: "Event added succesfully.",
-    status: "success",
-    duration: 5000,
-    position: "top-right",
-    isClosable: true,
-  });
-});
-
 export const loader = async () => {
   const categories = await fetch("http://localhost:3000/categories");
   const users = await fetch("http://localhost:3000/users");
@@ -46,6 +36,23 @@ export const loader = async () => {
 
 export const AddEvent = () => {
   const { users, categories } = useLoaderData();
+
+  const SentToast = () => {
+    const toast = useToast();
+    const fetcher = useFetcher();
+
+    useEffect(() => {
+      if (fetcher.data?.success) {
+        toast({
+          title: "Operatie geslaagd.",
+          status: "success",
+          duration: 5000,
+          position: "top-right",
+          isClosable: true,
+        });
+      }
+    });
+  };
 
   return (
     <Center>
@@ -137,6 +144,7 @@ export const AddEvent = () => {
             borderRadius="0"
             borderColor="black"
             boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
+            onClick={SentToast}
           >
             Add event
           </Button>
