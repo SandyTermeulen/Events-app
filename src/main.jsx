@@ -4,11 +4,7 @@ import { EventPage, loader as eventPageLoader } from "./pages/EventPage";
 import { EventsPage, loader as eventsPageLoader } from "./pages/EventsPage";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Root } from "./components/Root";
-import {
-  AddEvent,
-  loader as addEventLoader,
-  action as addevent,
-} from "./pages/AddEvent";
+import { AddEvent, loader as addEventLoader } from "./pages/AddEvent";
 import { EditEvent, loader as editEventLoader } from "./pages/EditEvent";
 import React from "react";
 
@@ -31,7 +27,6 @@ const router = createBrowserRouter([
         path: "/event/addevent",
         element: <AddEvent />,
         loader: addEventLoader,
-        action: addevent,
       },
       {
         path: "editevent/:eventId",

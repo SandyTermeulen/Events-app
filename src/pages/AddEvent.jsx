@@ -11,22 +11,8 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
 
-import { Form, useLoaderData, redirect, useFetcher } from "react-router-dom";
-
-export const action = async ({ request }) => {
-  const formData = Object.fromEntries(await request.formData());
-  const newId = await fetch("http://localhost:3000/events", {
-    method: "POST",
-    body: JSON.stringify(formData),
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((res) => res.json())
-    .then((json) => json.id);
-
-  return redirect(`/event/${newId}`);
-};
+import { Form, redirect, useLoaderData } from "react-router-dom";
 
 export const loader = async () => {
   const categories = await fetch("http://localhost:3000/categories");
@@ -35,23 +21,26 @@ export const loader = async () => {
 };
 
 export const AddEvent = () => {
+  const toast = useToast();
   const { users, categories } = useLoaderData();
 
-  const SentToast = () => {
-    const toast = useToast();
-    const fetcher = useFetcher();
-
-    useEffect(() => {
-      if (fetcher.data?.success) {
-        toast({
-          title: "Operatie geslaagd.",
-          status: "success",
-          duration: 5000,
-          position: "top-right",
-          isClosable: true,
-        });
-      }
+  const handeSubmit = ({ request }) => {
+    const formData = Object.fromEntries(request.formData());
+    const newId = fetch("http://localhost:3000/events", {
+      method: "POST",
+      body: JSON.stringify(formData),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((json) => json.id);
+    toast({
+      title: "Event added succesfully.",
+      status: "success",
+      duration: 5000,
+      position: "top-right",
+      isClosable: true,
     });
+    return redirect(`/event/${newId}`);
   };
 
   return (
@@ -68,7 +57,7 @@ export const AddEvent = () => {
         <Heading marginBottom={"3rem"} as="h1" size="2xl">
           Add new event
         </Heading>
-        <Form method="post" id="new-event-form">
+        <Form method="post" id="new-event-form" onSubmit={handeSubmit}>
           <FormControl isRequired>
             <FormLabel>Select user</FormLabel>
             <Select name="createdBy" placeholder="Select User">
@@ -144,7 +133,6 @@ export const AddEvent = () => {
             borderRadius="0"
             borderColor="black"
             boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
-            onClick={SentToast}
           >
             Add event
           </Button>
