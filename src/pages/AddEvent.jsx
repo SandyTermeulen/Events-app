@@ -10,7 +10,6 @@ import {
   Select,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useState } from "react";
 import { Form, useLoaderData, redirect } from "react-router-dom";
 
 export const action = async ({ request }) => {
@@ -23,6 +22,8 @@ export const action = async ({ request }) => {
     .then((res) => res.json())
     .then((json) => json.id);
 
+  localStorage.setItem("showToast", true);
+
   return redirect(`/event/${newId}`);
 };
 
@@ -34,12 +35,6 @@ export const loader = async () => {
 
 export const AddEvent = () => {
   const { users, categories } = useLoaderData();
-  const [showToast, setShowToast] = useState(false);
-
-  const handleClick = () => {
-    setShowToast(true);
-    localStorage.setItem("showToast", JSON.stringify(showToast));
-  };
 
   return (
     <Center>
@@ -130,7 +125,6 @@ export const AddEvent = () => {
             borderRadius="0"
             borderColor="black"
             boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
-            onClick={handleClick}
           >
             Add event
           </Button>

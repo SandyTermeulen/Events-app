@@ -64,7 +64,12 @@ export const EventsPage = () => {
             marginBottom={"2rem"}
             bg="white"
           >
-            <Heading marginBottom={"2rem"} as="h1" size="3xl">
+            <Heading
+              marginBottom={"2rem"}
+              as="h1"
+              size="3xl"
+              textAlign={"center"}
+            >
               Upcoming events
             </Heading>
             <Input
