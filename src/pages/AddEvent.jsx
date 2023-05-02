@@ -9,8 +9,8 @@ import {
   Input,
   Select,
   useColorModeValue,
-  useToast,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { Form, useLoaderData, redirect } from "react-router-dom";
 
 export const action = async ({ request }) => {
@@ -34,27 +34,11 @@ export const loader = async () => {
 
 export const AddEvent = () => {
   const { users, categories } = useLoaderData();
+  const [showToast, setShowToast] = useState(false);
 
-  const handleFetch = async () => {
-    const toast = useToast();
-
-    const actionValue = action();
-    if (await actionValue) {
-      toast({
-        title: "Operatie geslaagd.",
-        status: "success",
-        duration: 5000,
-        position: "top-right",
-        isClosable: true,
-      });
-      console.log("Toast!");
-    } else {
-      console.log("something went wrong");
-    }
-  };
-
-  const onSubmit = () => {
-    handleFetch();
+  const handleClick = () => {
+    setShowToast(true);
+    localStorage.setItem("showToast", JSON.stringify(showToast));
   };
 
   return (
@@ -71,7 +55,7 @@ export const AddEvent = () => {
         <Heading marginBottom={"3rem"} as="h1" size="2xl">
           Add new event
         </Heading>
-        <Form method="post" id="new-event-form" onSubmit={() => onSubmit()}>
+        <Form method="post" id="new-event-form">
           <FormControl isRequired>
             <FormLabel>Select user</FormLabel>
             <Select name="createdBy" placeholder="Select User">
@@ -146,6 +130,7 @@ export const AddEvent = () => {
             borderRadius="0"
             borderColor="black"
             boxShadow={useColorModeValue("6px 6px 0 black", "6px 6px 0 cyan")}
+            onClick={handleClick}
           >
             Add event
           </Button>

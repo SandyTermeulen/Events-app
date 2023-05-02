@@ -14,7 +14,7 @@ import {
   Spacer,
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLoaderData, Link } from "react-router-dom";
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 
@@ -32,7 +32,30 @@ export const loader = async ({ params }) => {
 
 export const EventPage = () => {
   const { event, users, categories } = useLoaderData();
+  const [showToast, setShowToast] = useState(false);
   const toast = useToast();
+
+  useEffect(() => {
+    const showToast = JSON.parse(localStorage.getItem("showToast"));
+    console.log(showToast);
+    if (showToast === "true") {
+      setShowToast(true);
+    }
+  }, []);
+
+  if (showToast) {
+    toast({
+      title: "Operatie geslaagd.",
+      status: "success",
+      duration: 5000,
+      position: "top-right",
+      isClosable: true,
+    });
+
+    // Reset de status
+    setShowToast(false);
+    localStorage.setItem("showToast", JSON.stringify(showToast));
+  }
 
   const handleDeleteClick = () => {
     if (window.confirm("Are you 100% sure you want to delete this event?")) {
